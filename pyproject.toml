@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "enterprise-kb-qa"
+version = "1.0.0"
+description = "企业智能知识问答平台：文档层级分块 + 向量/关键词双路召回 + RRF 融合 + 文档级权限过滤 + SSE 流式问答。"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Jiang Hua" }]
+keywords = ["rag", "retrieval", "faiss", "bm25", "rrf", "fastapi", "sse"]
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "numpy>=1.26",
+    "faiss-cpu>=1.8",
+    "rank-bm25>=0.2.2",
+    "jieba>=0.42",
+    "redis>=5.0",
+    "pymysql>=1.1",
+    "sse-starlette>=2.0",
+    "openai>=1.30",
+    "structlog>=24.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23", "httpx>=0.27", "fakeredis>=2.20", "ruff>=0.4", "mypy>=1.9"]
+
+[project.scripts]
+kbqa = "kbqa.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "S110"]
+
+[tool.ruff.lint.per-file-ignores]
+# FastAPI 的 Depends 就是要在默认参数里调用，B008 在这里是误报
+"src/kbqa/api.py" = ["B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true

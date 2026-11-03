@@ -1,0 +1,29 @@
+# 生成物：由 `kbqa ingest` 重建，不入库
+data/index/
+var/
+*.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# 工具缓存
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# 本地配置
+.env
+.env.local
+
+# 编辑器
+.idea/
+.vscode/
+.DS_Store
