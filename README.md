@@ -450,6 +450,8 @@ Success: no issues found in 15 source files
 | 重复请求响应下降 | `cache.py`，key 含部门与索引指纹 | `test_pipeline.py::test_second_ask_hits_cache` |
 | 检索链路可复用于手册问答 | `data/docs/具身机器人现场操作手册.md` + `/v1/search`（只要检索不要生成） | `kbqa ask "急停按钮在哪" --dept robot` |
 
+**关于「复用于场景记忆召回」**：简历写的是「检索链路可复用于机器人操作手册问答与场景记忆召回」。仓库里前半句是真的——`data/docs/具身机器人现场操作手册.md` 就在同一套索引里，`/v1/search` 只取检索、不要生成，正好是给机器人侧做知识查询的形态。后半句只到「接口可复用」这一层：没有记忆库、没有时间衰减、没有按 episode 的写入与召回，硬说实现了是不诚实的。
+
 **关于 LangChain**：简历技术栈里写了它。本仓库这条链路是手写的，原因写在代码里也说得清——三处都要改框架的默认行为：分块要在标题栈上维护 `section_path`（`TextSplitter.split` 只回文本，结构丢了），RRF 要知道每一路的名次（`EnsembleRetriever` 默认按加权分数融合），权限过滤必须发生在「召回后、截断前」（框架的 retriever 没有这个钩子）。三处都要绕过框架，直接写更便宜——这条链一共一千二百行左右。原型阶段用过 `DocumentLoader + TextSplitter + FAISS`，换掉是为了控制边界，不是为了不用框架。
 
 ---
